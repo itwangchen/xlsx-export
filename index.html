@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn" onclick="btn_export()">导出</button>
+</body>
+<script src="./js/export.js"></script>
+<script src="js/xlsx-style/xlsx.full.min.js"></script>
+<script src="js/FileSaver.min.js"></script>
+
+<script>
+    function btn_export() {
+        const multiHeader = [
+            ["序号", "分公司", "营业天数", "服务人数", "泡脚收入", "维护收入", "", "", "", "产品收入", "其他项收入",
+                "会员卡充值", "", "会员卡消费", "", "套餐卡", "", "现金业绩", "", "实际金额", "",
+                "现金构成", "", "", "", "", "", "", ""
+                , "小计", "免脚双数"
+            ]
+        ];
+        const tHeader = ["", "", "", "", "", "肉刺", "血胞刺", "甲沟炎", "其他", "", "",
+            "IC卡", "电子卡", "IC卡", "电子卡", "开卡", "消费", "金额", "日均", "金额", "日均",
+            "现金收入", "pos收入", "微信小程序消费", "远元健康核销收入", "口碑", "天猫", "美团", "联联"
+            , "", ""
+        ];
+        const filterVal = [
+        ];
+        let item = {};
+
+        for (let i = 0; i < 31; i++) {
+            filterVal.push('id' + (i + 1))
+            item['id' + (i + 1)] = i;
+        }
+        const list = [];
+        for (let i = 0; i < 100; i++) {
+            list.push(item);
+        }
+
+        const data = formatJson(filterVal, list);
+        const merges = ["A1:A2", "B1:B2", "C1:C2", "D1:D2", "E1:E2", "F1:I1", "J1:J2", "K1:K2", "L1:M1", "N1:O1", "P1:Q1", "R1:S1", "T1:U1", "V1:AC1", "AD1:AD2", "AE1:AE2"];
+        const filename = '营业报表-分公司'
+        export_json_to_excel({
+            multiHeader,
+            header: tHeader,
+            data,
+            merges,
+            filename: filename,
+            autoWidth: true,
+            bookType: "xlsx",
+            styleFunction: function (ws) {
+                let border = {
+                    bottom: { style: "thin", color: { rgb: "000000" } }, top: { style: "thin", color: { rgb: "000000" } },
+                    left: { style: "thin", color: { rgb: "000000" } }, right: { style: "thin", color: { rgb: "red" } }
+                };
+                //加粗
+                let style0 = { border: border, alignment: { horizontal: 'center', wrapText: true, vertical: "center" }, font: { sz: 12, bold: false, color: { rgb: "000000" }, outline: true } };
+                //蓝底加粗
+                let style3 = { border: border, alignment: { horizontal: 'center', wrapText: true, vertical: "center" }, font: { sz: 12, bold: true, color: { rgb: "000000" }, outline: true }, fill: { fgColor: { rgb: "00BFFF" } } };
+                // console.log(ws, 'ws');
+                for (const key in ws) {
+                    if (key.indexOf('!') == -1) {
+                        const element = ws[key];
+                        element.s = style0;
+                        ws[key] = element
+                    }
+                }
+                let headerIndex = [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1",
+                    "E1",
+                    "F1",
+                    "G1",
+                    "H1",
+                    "I1",
+                    "J1",
+                    "K1",
+                    "L1",
+                    "M1",
+                    "N1",
+                    "O1",
+                    "P1",
+                    "Q1",
+                    "R1",
+                    "S1",
+                    "T1",
+                    "U1",
+                    "V1",
+                    "W1",
+                    "X1",
+                    "Y1",
+                    "Z1",
+                    "AA1",
+                    "AB1",
+                    "AC1",
+                    "AD1",
+                    "AE1",
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2",
+                    "E2",
+                    "F2",
+                    "G2",
+                    "H2",
+                    "I2",
+                    "J2",
+                    "K2",
+                    "L2",
+                    "M2",
+                    "N2",
+                    "O2",
+                    "P2",
+                    "Q2",
+                    "R2",
+                    "S2",
+                    "T2",
+                    "U2",
+                    "V2",
+                    "W2",
+                    "X2",
+                    "Y2",
+                    "Z2",
+                    "AA2",
+                    "AB2",
+                    "AC2",
+                    "AD2",
+                    "AE2",
+                ]
+                for (let i = 0; i < headerIndex.length; i++) {
+                    const element = headerIndex[i];
+                    ws[element].s = style3;
+                }
+                return ws
+            }
+        });
+    }
+</script>
+
+</html>
